@@ -23,6 +23,11 @@ class LoginForm extends Component {
     email: '',
     password: ''
   };
+
+  componentDidMount() {
+    //THIS TO BE DELETED LATER
+    this.props.loginUser({ email: 's@m.com', password: '123456' });
+  }
   componentWillUnmount() {}
 
   onEmailChange(text) {

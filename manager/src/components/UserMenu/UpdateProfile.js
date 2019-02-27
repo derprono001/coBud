@@ -24,7 +24,8 @@ import { accordionBorderColor } from '../../../native-base-theme/variables/mater
 
 import {
   updateProfile,
-  getUserProfile
+  getUserProfile,
+  reset
 } from '../../actions/UserProfileActions';
 
 class UpdateProfile extends Component {
@@ -59,7 +60,7 @@ class UpdateProfile extends Component {
   }
 
   componentWillUnmount() {
-    // Actions.pop();
+    //this.props.reset();
   }
 
   handleChange(props, val) {
@@ -183,5 +184,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { updateProfile, getUserProfile }
+  { updateProfile, getUserProfile, reset }
 )(UpdateProfile);
