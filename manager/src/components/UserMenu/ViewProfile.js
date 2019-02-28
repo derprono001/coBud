@@ -1,8 +1,10 @@
+/* eslint-disable no-mixed-operators */
 import React, { Component } from 'react';
 import {
   Container,
   Content,
   Header,
+  Item,
   Text,
   Left,
   Body,
@@ -11,36 +13,34 @@ import {
   Button,
   Icon,
   List,
-  ListItem,
-  Card,
-  CardItem
+  ListItem
 } from 'native-base';
-import { Dimensions } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import UserAvatar from 'react-native-user-avatar';
 
 import { accordionBorderColor } from '../../../native-base-theme/variables/commonColor';
 import { getUserProfile, reset } from '../../actions/UserProfileActions';
+import { viewportHeight } from './../common/constVar';
 
 const viewport = Dimensions.get('window').width;
 
 const styles = {
   listHeader: {
     backgroundColor: 'rgba(0,0,0,0.1)',
-    height: 24,
-    paddingLeft: 8,
-    marginBottom: 2,
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
   },
   link: {
     fontSize: 0.0275 * viewport,
-    fontStyle: 'italic',
-    color: 'rgba(0,0,0,0.7)'
+    color: 'rgba(0,0,0,0.7)',
+    alignSelf: 'center'
   },
   textHeader: {
+    fontWeight: 'bold',
     fontSize: 14,
     color: 'rgba(0,0,0,0.8)'
   }
@@ -94,20 +94,12 @@ class ViewProfile extends Component {
           </Left>
           <Body>
             {!isMyProfile && (
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={{ color: 'white' }}
-              >
+              <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: 'white' }}>
                 View Profile
               </Text>
             )}
             {isMyProfile && (
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={{ color: 'white' }}
-              >
+              <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: 'white' }}>
                 View My Profile
               </Text>
             )}
@@ -125,135 +117,127 @@ class ViewProfile extends Component {
           {loading && <Spinner color={accordionBorderColor} />}
           {!loading && (
             <Content>
-              <Card>
-                <CardItem>
-                  <Body
-                    style={{ justifyContent: 'center', alignItems: 'center' }}
-                  >
-                    <UserAvatar
-                      colors={['#2EDFB7', '#FF484A', '#DA5F8E']}
-                      name={
-                        userProfile
-                          ? userProfile.name && userProfile.name
-                          : user.user.email
-                      }
-                      size="50"
-                    />
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <List
-                    style={{
-                      flex: 1,
-                      width: viewport / 2 + 120
-                    }}
-                  >
-                    {userProfile && (
-                      <React.Fragment>
-                        <ListItem itemHeader style={styles.listHeader}>
-                          <Left>
-                            <Text style={styles.textHeader}>
-                              Personal Information
-                            </Text>
-                          </Left>
-                        </ListItem>
-                        <ListItem>
-                          <Left>
-                            <Text>Name</Text>
-                          </Left>
-                          <Right>
-                            <Text style={{ fontSize: 14 }}>
-                              {userProfile.name}
-                            </Text>
-                          </Right>
-                        </ListItem>
+              <View
+                style={{
+                  height: viewportHeight / 4,
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Item style={{ paddingTop: viewportHeight / 8 }}>
+                  <UserAvatar
+                    colors={['#2EDFB7', '#FF484A', '#DA5F8E']}
+                    name={userProfile ? userProfile.name && userProfile.name : user.user.email}
+                    size="100"
+                  />
+                </Item>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <List
+                  style={{
+                    height: viewportHeight / 2 + 100,
+                    width: viewport / 2 + 160,
+                    alignContent: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  {userProfile && (
+                    <React.Fragment>
+                      <ListItem itemHeader style={styles.listHeader}>
+                        <Left>
+                          <Text style={styles.textHeader}>Name: </Text>
+                        </Left>
+                        <Body style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                          <Text style={{ fontSize: 14 }}>{userProfile.name}</Text>
+                        </Body>
+                      </ListItem>
 
-                        <ListItem itemHeader style={styles.listHeader}>
-                          <Left>
-                            <Text style={styles.textHeader}>
-                              Contact Information
-                            </Text>
-                          </Left>
-                          <Right>
-                            <Text style={{ fontSize: 14 }}>
-                              {userProfile.address},{userProfile.city}
-                            </Text>
-                          </Right>
-                        </ListItem>
-
-                        <ListItem itemHeader style={styles.listHeader}>
-                          <Left>
-                            <Text style={styles.textHeader}>Place Visited</Text>
-                          </Left>
-                          <Right style={{ paddingTop: 5 }}>
-                            <Text style={styles.link}>All</Text>
-                            <Button transparent dark iconRight>
-                              <Icon name="arrow-forward" />
-                            </Button>
-                          </Right>
-                        </ListItem>
-
-                        <ListItem itemHeader style={styles.listHeader}>
-                          <Left>
-                            <Text style={styles.textHeader}>My Reviews</Text>
-                          </Left>
-                          <Right style={{ paddingTop: 5 }}>
-                            <Button transparent dark iconRight>
-                              <Text style={styles.link}> All</Text>
-                              <Icon name="arrow-forward" />
-                            </Button>
-                          </Right>
-                        </ListItem>
-
-                        <ListItem itemHeader style={styles.listHeader}>
-                          <Left>
-                            <Text style={styles.textHeader}>My Place</Text>
-                          </Left>
-                          <Right style={{ paddingTop: 5 }}>
-                            <Button transparent dark iconRight>
-                              <Text style={styles.link}> All</Text>
-                              <Icon name="arrow-forward" />
-                            </Button>
-                          </Right>
-                        </ListItem>
-                      </React.Fragment>
-                    )}
-
-                    {isMyProfile && !userProfile && (
-                      <React.Fragment>
-                        <ListItem>
-                          <Text>You haven't set up your profile</Text>
-                        </ListItem>
-                        <ListItem>
-                          <Button
-                            style={{ margin: 'auto' }}
-                            iconRight
-                            onPress={() => Actions.updateprofile()}
-                          >
-                            <Text>Tap here to update your profile</Text>
-                            <Icon name="edit" type="FontAwesome" />
+                      <ListItem itemHeader style={styles.listHeader}>
+                        <Left>
+                          <Text style={styles.textHeader}>City: </Text>
+                        </Left>
+                        <Body style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                          <Text style={{ fontSize: 14 }}>{userProfile.city}</Text>
+                        </Body>
+                      </ListItem>
+                      <ListItem itemHeader style={styles.listHeader}>
+                        <Left>
+                          <Text style={styles.textHeader}>Place Visited</Text>
+                        </Left>
+                        <Right>
+                          <Button transparent dark iconRight>
+                            <Text style={styles.link}>view</Text>
+                            <Icon name="arrow-forward" />
                           </Button>
-                        </ListItem>
-                      </React.Fragment>
-                    )}
+                        </Right>
+                      </ListItem>
 
-                    {!isMyProfile && !userProfile && (
-                      <React.Fragment>
-                        <ListItem>
-                          <Text danger>
-                            There's something wrong. Please try again later!
-                          </Text>
-                        </ListItem>
-                        <ListItem padder button>
-                          <Button>
-                            <Text>Tap here to go back</Text>
+                      <ListItem itemHeader style={styles.listHeader}>
+                        <Left>
+                          <Text style={styles.textHeader}>My Reviews</Text>
+                        </Left>
+                        <Right>
+                          <Button transparent dark iconRight>
+                            <Text style={styles.link}>view</Text>
+                            <Icon name="arrow-forward" />
                           </Button>
-                        </ListItem>
-                      </React.Fragment>
-                    )}
-                  </List>
-                </CardItem>
-              </Card>
+                        </Right>
+                      </ListItem>
+
+                      <ListItem itemHeader style={styles.listHeader}>
+                        <Left>
+                          <Text style={styles.textHeader}>My Place</Text>
+                        </Left>
+                        <Right>
+                          <Button transparent dark iconRight>
+                            <Text style={styles.link}>view</Text>
+                            <Icon name="arrow-forward" />
+                          </Button>
+                        </Right>
+                      </ListItem>
+                    </React.Fragment>
+                  )}
+
+                  {isMyProfile && !userProfile && (
+                    <React.Fragment>
+                      <ListItem>
+                        <Text>You haven't set up your profile</Text>
+                      </ListItem>
+                      <ListItem>
+                        <Button
+                          style={{ margin: 'auto' }}
+                          iconRight
+                          onPress={() => Actions.updateprofile()}
+                        >
+                          <Text>Tap here to update your profile</Text>
+                          <Icon name="edit" type="FontAwesome" />
+                        </Button>
+                      </ListItem>
+                    </React.Fragment>
+                  )}
+
+                  {!isMyProfile && !userProfile && (
+                    <React.Fragment>
+                      <ListItem>
+                        <Text danger>There's something wrong. Please try again later!</Text>
+                      </ListItem>
+                      <ListItem padder button>
+                        <Button>
+                          <Text>Tap here to go back</Text>
+                        </Button>
+                      </ListItem>
+                    </React.Fragment>
+                  )}
+                </List>
+              </View>
             </Content>
           )}
         </Content>
